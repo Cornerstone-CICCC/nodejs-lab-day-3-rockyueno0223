@@ -4,11 +4,13 @@ import { socket } from './sockets/socket';
 interface ChatData {
   username: string;
   message: string;
+  room: string;
 }
 
 function App() {
   const [message, setMessage] = useState("");
   const [receivedMessages, setReceivedMessages] = useState<Array<ChatData>>([]);
+  const [room, setRoom] = useState('');
 
   useEffect(() => {
     const fetchMessageData = async () => {
@@ -37,14 +39,32 @@ function App() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (message) {
-      socket.emit('sendMessage', { message: message, username: socket.id })
+    if (message && room) {
+      socket.emit('sendMessage', { message: message, username: socket.id, room: room })
       setMessage('');
+    }
+  }
+
+  const handleChangeRoom = (newRoom: string) => {
+    if (room !== newRoom) {
+      socket.emit('join room', { room: newRoom, username: socket.id })
+      setRoom(newRoom);
     }
   }
 
   return (
     <>
+      <select
+        name="room-select"
+        id=""
+        defaultValue=""
+        onChange={e => handleChangeRoom(e.target.value)}
+      >
+        <option value="" disabled>Select a room</option>
+        <option value="Room1">Room1</option>
+        <option value="Room2">Room2</option>
+        <option value="Room3">Room3</option>
+      </select>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
