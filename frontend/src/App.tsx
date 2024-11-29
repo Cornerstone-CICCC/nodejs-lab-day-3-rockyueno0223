@@ -11,6 +11,18 @@ function App() {
   const [receivedMessages, setReceivedMessages] = useState<Array<ChatData>>([]);
 
   useEffect(() => {
+    const fetchMessageData = async () => {
+      try {
+        const res = await fetch('http://localhost:3500/api/chat');
+        const data = await res.json();
+        setReceivedMessages(data.reverse());
+      } catch (error) {
+        console.error("Failed to fetch chat data:", error);
+      }
+    }
+
+    fetchMessageData();
+
     const handleMessage = (data: ChatData) => {
       setReceivedMessages((prevMessages) => [...prevMessages, data]);
     };
@@ -45,8 +57,8 @@ function App() {
         <button type="submit">Send Message</button>
       </form>
       <ul>
-        {receivedMessages.map((msg) => (
-          <li>{msg.message}</li>
+        {receivedMessages.map((msg, index) => (
+          <li key={index}>{msg.message}</li>
         ))}
       </ul>
     </>
