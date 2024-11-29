@@ -8,6 +8,7 @@ interface ChatData {
 }
 
 function App() {
+  const [username, setUsername] = useState("");
   const [message, setMessage] = useState("");
   const [receivedMessages, setReceivedMessages] = useState<Array<ChatData>>([]);
   const [room, setRoom] = useState('');
@@ -43,19 +44,22 @@ function App() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (message && room) {
-      socket.emit('sendMessage', { message: message, username: socket.id, room: room })
+    if (username && message && room) {
+      socket.emit('sendMessage', { message: message, username: username, room: room })
       setMessage('');
     }
   }
 
   const handleChangeRoom = (newRoom: string) => {
-    if (room) {
-      socket.emit('leave room', { room: room, username: socket.id });
-    }
-    if (room !== newRoom) {
-      socket.emit('join room', { room: newRoom, username: socket.id })
-      setRoom(newRoom);
+    if (username) {
+      if (room) {
+        socket.emit('leave room', { room: room, username: username });
+      }
+
+      if (room !== newRoom) {
+        socket.emit('join room', { room: newRoom, username: username })
+        setRoom(newRoom);
+      }
     }
   }
 
@@ -73,6 +77,14 @@ function App() {
         <option value="Room3">Room3</option>
       </select>
       <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="username-input"
+          id=""
+          placeholder='Username'
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
         <input
           type="text"
           name="message-input"
