@@ -50,6 +50,9 @@ function App() {
   }
 
   const handleChangeRoom = (newRoom: string) => {
+    if (room) {
+      socket.emit('leave room', { room: room, username: socket.id });
+    }
     if (room !== newRoom) {
       socket.emit('join room', { room: newRoom, username: socket.id })
       setRoom(newRoom);
@@ -82,7 +85,9 @@ function App() {
       </form>
       <ul>
         {receivedMessages.map((msg, index) => (
-          <li key={index}>{msg.message}</li>
+          <li key={index}>
+            <strong>{msg.username}: </strong>{msg.message}
+          </li>
         ))}
       </ul>
     </>

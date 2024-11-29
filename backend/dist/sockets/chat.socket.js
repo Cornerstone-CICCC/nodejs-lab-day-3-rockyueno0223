@@ -34,7 +34,7 @@ const setupChatSocket = (io) => {
         socket.on('join room', (data) => {
             socket.join(data.room);
             console.log(`${data.username} joined the room ${data.room}`);
-            io.to(data.room).emit('sendMessage', {
+            io.to(data.room).emit('newMessage', {
                 message: `${data.username} join the room ${data.room}`,
                 username: 'System',
                 room: data.room
@@ -44,7 +44,7 @@ const setupChatSocket = (io) => {
         socket.on('leave room', (data) => {
             socket.leave(data.room);
             console.log(`${data.username} has left the room ${data.room}`);
-            io.to(data.room).emit('sendMessage', {
+            io.to(data.room).emit('newMessage', {
                 message: `${data.username} has left the room ${data.room}`,
                 username: 'System',
                 room: data.room
