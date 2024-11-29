@@ -13,18 +13,6 @@ function App() {
   const [room, setRoom] = useState('');
 
   useEffect(() => {
-    const fetchMessageData = async () => {
-      try {
-        const res = await fetch('http://localhost:3500/api/chat');
-        const data = await res.json();
-        setReceivedMessages(data.reverse());
-      } catch (error) {
-        console.error("Failed to fetch chat data:", error);
-      }
-    }
-
-    fetchMessageData();
-
     const handleMessage = (data: ChatData) => {
       setReceivedMessages((prevMessages) => [...prevMessages, data]);
     };
@@ -36,6 +24,22 @@ function App() {
       socket.off('newMessage', handleMessage);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchMessageDataByRoom = async () => {
+      try {
+        const res = await fetch(`http://localhost:3500/api/chat/${room}`);
+        const data = await res.json();
+        setReceivedMessages(data.reverse());
+      } catch (error) {
+        console.error("Failed to fetch chat data:", error);
+      }
+    }
+
+    if (room) {
+      fetchMessageDataByRoom();
+    }
+  }, [room]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
