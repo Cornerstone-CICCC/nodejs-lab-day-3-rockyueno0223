@@ -82,48 +82,56 @@ function App() {
   }
 
   return (
-    <>
-      <select
-        name="room-select"
-        id=""
-        value={room}
-        onChange={e => handleChangeRoom(e.target.value)}
-      >
-        <option value="" disabled>Select a room</option>
-        <option value="Room1">Room1</option>
-        <option value="Room2">Room2</option>
-        <option value="Room3">Room3</option>
-      </select>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username-input"
-          id=""
-          placeholder='Username'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="text"
-          name="message-input"
-          id=""
-          placeholder='Message'
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-        <button type="submit">Send Message</button>
+    <div className='w-full max-w-screen-xl mx-auto flex flex-col gap-6 py-6 px-4'>
+      <form onSubmit={handleSubmit} className='w-full flex flex-col sm:flex-row sm:justify-start gap-3'>
+        <div className="flex flex-col items-center w-full max-w-md mx-auto sm:w-1/2 sm:max-w-sm sm:mx-0 gap-3">
+          <input
+            type="text"
+            name="username-input"
+            id=""
+            placeholder='Username'
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className='w-full border border-slate-300 rounded p-1'
+          />
+          <select
+            name="room-select"
+            id=""
+            value={room}
+            onChange={e => handleChangeRoom(e.target.value)}
+            className='w-full border border-slate-300 rounded p-1 cursor-pointer'
+          >
+            <option value="" disabled>Select a room</option>
+            <option value="Room1">Room1</option>
+            <option value="Room2">Room2</option>
+            <option value="Room3">Room3</option>
+          </select>
+        </div>
+        <div className="flex flex-col items-center w-full max-w-md mx-auto sm:w-1/2 sm:max-w-sm sm:mx-0  gap-3">
+          <textarea
+            name="message-input"
+            id=""
+            rows={3}
+            placeholder='Message'
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            className='w-full border border-slate-300 rounded p-1'
+          />
+          <button type="submit" className='w-full text-white bg-neutral-800 hover:opacity-90 rounded py-2'>Send Message</button>
+        </div>
       </form>
       {error && (
-        <p className='text-red-500'>{error}</p>
+        <p className='w-full text-center text-lg text-red-500'>{error}</p>
       )}
-      <ul>
+      <ul className='max-w-3xl'>
         {receivedMessages.map((msg, index) => (
-          <li key={index}>
-            <strong>{msg.username}: </strong>{msg.message}
+          <li key={index} className='my-1 border-b border-neutral-200'>
+            <strong>{msg.username}</strong><br />
+            {msg.message}
           </li>
         ))}
       </ul>
-    </>
+    </div>
   )
 }
 
